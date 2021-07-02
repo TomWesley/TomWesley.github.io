@@ -22,27 +22,7 @@ function draw() {
  fill((200 * abs(x(temporary))),(20 * abs(sin(temporary))),200 * abs(cos(temporary)),25);
   //fill(0,20);
   rect(-width/2, -height/2, width, height);
-    //background(255,0,0);
-  /*if(keyIsPressed){
-    console.log(keyCode);
-	if(keyCode == 114){
-      rotate(radians(delay));
-      //fullscreen(full);
-      //resizeCanvas(displayWidth, displayHeight);
-      //width=displayWidth;
-      //height=displayHeight;
-      if(full === true){
-        full = false;
-      }
-      else{
-        full = true;
-      }
 
-      keyIsPressed = false;
-      miniScreen = 1;
-    }
-  }
-  */
 
   if (keyIsDown(LEFT_ARROW)) {
     rotate(radians(-delay));
@@ -51,10 +31,6 @@ function draw() {
   if (keyIsDown(RIGHT_ARROW)) {
     rotate(radians(delay));
   }
-
-
- // fullscreen();
- // background(0);
 
   delay=delay+1;
 
@@ -96,7 +72,7 @@ function draw() {
    translate(-width/2, -height/2);
 }
 
-function mouseClicked(){
+function mouseClicked() {
   if(song.isPlaying()){
     song.pause();
   } else {
