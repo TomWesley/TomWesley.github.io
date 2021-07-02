@@ -1,5 +1,4 @@
 var LINE_C=25;
-var delay=0
 let full = true;
 let miniScreen = 0;
 let backgroundCount = 0;
