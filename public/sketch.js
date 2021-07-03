@@ -97,7 +97,7 @@ else{
 
     ///  fixer[x] = terrain[x][y];
       //terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 55)*(1+amp);
-      terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 55);
+      terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 65);
 
      // }
       xoff += 0.2;
@@ -152,14 +152,17 @@ else{
      // if(delay>100){
      // stroke(240, 110, 150, 255*y/410);
     //  }
-     var loc = abs(rows/2-y) + abs(cols/2-x);
-     var i = floor(map(loc,0,(rows/2+cols/2),0,wave.length));
+     //var loc = abs(rows/2-y) + abs(cols/2-x);
+     var loc = y*cols+x
+     //var i = floor(map(loc,0,(rows/2+cols/2),0,wave.length));
+     var i = floor(map(loc,0,(rows*cols+cols),0,wave.length));
 
-     fill((155*cos(delay*PI/300)+155*wave[i]),sin(delay*PI/1000)*255+65*wave[i],250-85*wave[i]-terrain[x][y]*3,255);
+     //fill((155*cos(delay*PI/300)+155*wave[i]),sin(delay*PI/1000)*255+65*wave[i],250-85*wave[i]-terrain[x][y]*3,255);
+     fill((215*cos(delay*PI/300)+20*wave[i]),sin(delay*PI/1000)*175+15*wave[i],175+10*wave[i]-terrain[x][y]*5,255);
 
      //noStroke();
     stroke(0,255);
-    strokeWeight(0.5);
+    strokeWeight(0.1);
 
 
       vertex(x*scl, y*scl, terrain[x][y]);
