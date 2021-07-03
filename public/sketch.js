@@ -11,7 +11,7 @@ let rows= 0;
 let scl = 20;
 let telemetry =[];
 //int w =5000;
-let w = 1300;
+let w = 800;
 //int h = 8200;
 let h = 1200;
 let delay = 0 ;
@@ -21,12 +21,16 @@ let terrain = [];
 let chamber =0;
 var fixer=[];
 var tempVariable = 0;
+
+var amplitude;
 function preload(){
   song = loadSound('CarlSagan.mp3');
   fft = new p5.FFT();
+
 }
 
 function setup() {
+  amplitude = new p5.Amplitude();
   telemetry[0]=color(255, 110, 150, opac);
   telemetry[1] =color(255, 200, 10, opac);
   telemetry[2] =color(43, 88, 222,opac);
@@ -47,9 +51,11 @@ function setup() {
 
 function draw() {
   var wave = fft.waveform();
+  var amp = amplitude.getLevel();
   delay = delay + 1;
   //delay = delay +1;
-  flying -= .2;
+  //console.log(amp);
+  flying -= (.1)*(1+amp*3);
 
   let yoff = flying;
   if(delay < 2){
@@ -66,12 +72,12 @@ function draw() {
       //var temp = map(wave[index],0,1,0,100);
       //terrain[x][y] = wave[index]*50;
 
-      terrain[x][y] = map(temp, 0, 1, 0, 30 + (100+wave[index]*100));
+      terrain[x][y] = map(temp, 0, 1, 0, 30);
 
      // }
-      xoff += 0.1;
+      xoff += 0.5;
     }
-    yoff += 0.1;
+    yoff += 0.5;
   }
 }
 else{
@@ -83,26 +89,20 @@ else{
         terrain[x][y] = 0;
       }else{*/
       //var index = floor(map(x,0,cols,0,wave.length));
-      var temp = noise(xoff, yoff);
-      var index = floor(map(temp,0,1,0,wave.length));
+    //  var temp = noise(xoff, yoff);
+    //  var index = floor(map(temp,0,1,0,wave.length));
       //var temp = map(wave[index],0,1,0,100);
       //terrain[x][y] = wave[index]*50;
 
-    if(yoff == flying){
-      fixer[x] = terrain[x][y];
-      terrain[x][y] = map(temp, 0, 1, 0, 30 + (100+wave[index]*100));
-    }
-    else{
 
-        tempVariable = terrain[x][y];
-        terrain[x][y] = fixer[x];
-        fixer[x] = tempVariable;
+    ///  fixer[x] = terrain[x][y];
+      //terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 55)*(1+amp);
+      terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 55);
 
-    }
      // }
-      xoff += 0.1;
+      xoff += 0.2;
     }
-    yoff += 0.1;
+    yoff += 0.2;
   }
 
 
@@ -134,17 +134,15 @@ else{
   rotateX(PI/2.2);
   //console.log(-w/2);
   translate(-w/2, -h/2);
-colorMode(HSB, 100);
+//colorMode(HSB, 100);
   for (let y = 0; y < rows-1; y++) {
     //rotateX(y*PI/cols);
     if(chamber >= topValue){
       chamber = 0;
     }
-    //stroke(240, 110, 150, 155+50*(1+cos(delay*PI/4)));
-    //stroke(255);
-    //stroke(43,88,222,255);
 
     noStroke();
+  //  fill(255,0,0,255);
     beginShape(TRIANGLE_STRIP);
     for (let x = 0; x < cols; x++) {
 
@@ -154,8 +152,14 @@ colorMode(HSB, 100);
      // if(delay>100){
      // stroke(240, 110, 150, 255*y/410);
     //  }
+     var loc = abs(rows/2-y) + abs(cols/2-x);
+     var i = floor(map(loc,0,(rows/2+cols/2),0,wave.length));
 
-     stroke(255,255*y/60);
+     fill((155*cos(delay*PI/300)+155*wave[i]),sin(delay*PI/1000)*255+65*wave[i],250-85*wave[i]-terrain[x][y]*3,255);
+
+     //noStroke();
+    stroke(0,255);
+    strokeWeight(0.5);
 
 
       vertex(x*scl, y*scl, terrain[x][y]);
