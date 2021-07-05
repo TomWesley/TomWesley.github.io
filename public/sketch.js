@@ -21,6 +21,7 @@ let terrain = [];
 let chamber =0;
 var fixer=[];
 var tempVariable = 0;
+let stars;
 
 var amplitude;
 function preload(){
@@ -30,6 +31,7 @@ function preload(){
 }
 
 function setup() {
+  stars = loadImage("StarBackdrop.jpg");
   amplitude = new p5.Amplitude();
   telemetry[0]=color(255, 110, 150, opac);
   telemetry[1] =color(255, 200, 10, opac);
@@ -50,6 +52,7 @@ function setup() {
 }
 
 function draw() {
+  image(stars,0,0);
   var wave = fft.waveform();
   var amp = amplitude.getLevel();
   delay = delay + 1;
@@ -113,7 +116,7 @@ else{
 
 
   //background(0+40*(1+tan(delay*PI/50)),0,0+70*(1+sin(delay*PI/50)));
-  background(0);
+
   noStroke();
   //stroke(255);
   let topValue;
