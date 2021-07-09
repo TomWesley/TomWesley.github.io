@@ -16,8 +16,6 @@ let w = 1800;
 let h = 800;
 let delay = 0 ;
 let opac = 255;
-let flying = 0;
-let terrain = [];
 let chamber =0;
 var fixer=[];
 var tempVariable = 0;
@@ -31,6 +29,12 @@ let osy = 0;
 let frequency = 7;
 let topValue=5;
 var amplitude;
+
+let xValue = 0;
+let yValue = 0;
+let unitStepX = 5;
+let unitStepY = 5;
+
 function preload(){
   song = loadSound('CarlSagan.mp3');
   fft = new p5.FFT();
@@ -38,6 +42,7 @@ function preload(){
 }
 
 function setup() {
+  angleMode(DEGREES);
   stars = loadImage("StarBackdrop.jpg");
   amplitude = new p5.Amplitude();
   telemetry[0]=color(255, 110, 150, opac);
@@ -48,59 +53,29 @@ function setup() {
   telemetry[4] =color(255,255,255,opac);
 
   //fullScreen(P3D);
-  createCanvas(1280,720, WEBGL);
+  createCanvas(1280,720);
   //size(1080, 1350, P3D);
   cols = (w / scl);
   rows = (h/ scl);
-  for (let x = 0; x < cols; x++) {
-    terrain[x] = []; // create nested array
-  }
   //terrain = new float[cols][rows];
   strokeWeight(0.1);
 }
 
 function draw() {
-  //image(stars,0,0);
-  beginShape();
+  image(stars,0,0);
+/*  beginShape();
   texture(stars);
 
   vertex(-scalar, -scalar, -2000, 0, 0);
   vertex(width+scalar, -scalar, -2000, 5000, 0);
   vertex(width+scalar, height+scalar, -2000, 5000, 3000);
   vertex(0-scalar, height+scalar, -2000, 0, 3000);
-  endShape();
+  endShape();*/
   var wave = fft.waveform();
   var amp = amplitude.getLevel();
   delay = delay + 1;
   //delay = delay +1;
   //console.log(amp);
-  flying -= (.1);
-
-  let yoff = flying;
-  for (let y = 0; y < rows; y++) {
-    let xoff = 0;
-
-    for (let x = 0; x < cols; x++) {
-      //var index = floor(map(x,0,cols,0,wave.length));
-    //  var temp = noise(xoff, yoff);
-    //  var index = floor(map(temp,0,1,0,wave.length));
-      //var temp = map(wave[index],0,1,0,100);
-      //terrain[x][y] = wave[index]*50;
-
-
-    ///  fixer[x] = terrain[x][y];
-      //terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, 55)*(1+amp);
-      terrain[x][y] = map(noise(xoff, yoff), 0, 1, 0, floor(abs(x-cols/2)*15));
-
-     // }
-      xoff += 0.2;
-    }
-    yoff += 0.2;
-  }
-
-
-  noStroke();
-  //stroke(255);
 
   /*if(delay%5 == 0){
     topValue = 1;
@@ -111,60 +86,53 @@ function draw() {
   else{
     topValue = 5;
   }*/
-  translate(0, -height/5);
+
   if(chamber >= topValue){
     chamber = 0;
   }
-  let circleSize = 20;
-  stroke(255, 255);
+  let circleSize = 300;
   stroke(telemetry[chamber]);
   noFill();
+  stroke(255);
+  strokeWeight(2);
+  xValue = xValue + unitStepX;
+  yValue = yValue + unitStepY;
+
+  if(xValue <= -width/2 || xValue >= width/2){
+    unitStepX = unitStepX*-1;
+  }
+  if(yValue <= -height/2|| yValue >= height/2){
+    unitStepY = unitStepY*-1;
+  }
+  translate(width/2, height/2);
+  let volume = amp*circleSize;
+
   beginShape();
-  for(let angle=delay;angle< delay+360;angle=angle+2){
-    x=(250)*cos(radians(angle))-0;
-    y=(250)*sin(radians(angle))+0;
+  for(let angle = 0; angle <= 180; angle = angle+1){
+    let index = floor(map(angle, 0, 180, 0, wave.length));
+    let r = map(wave[index], -1, 1, circleSize/3, circleSize);
+
+    let x = r * sin(angle) + xValue;
+    let y = r * cos(angle) + yValue;
+  //  x=(circleSize+(volume)*wave[index])*cos(radians(angle))-0;
+  //  y=(circleSize+(volume)*wave[index])*sin(radians(angle))+0;
+    vertex(x,y);
+  }
+  endShape();
+  translate(-width/2, -height/2);
   //frequency = 5+delay/10000;
   frequency = 11+delay/50000;
 
   chamber = chamber+1;
 
   strokeWeight(0.1);
-  translate(0, height/5);
 
   translate(0, 310);
   stroke(255);
   noFill();
-  rotateX(PI/2.2);
   translate(-w/2, -h/2);
 //colorMode(HSB, 100);
- for (let y = 0; y < rows-1; y++) {
-    //rotateX(y*PI/cols);
 
-    noStroke();
-  //  fill(255,0,0,255);
-    beginShape(TRIANGLE_STRIP);
-    for (let x = 0; x < cols; x++) {
-
-      //fill(100-100*terrain[x][y]/200,100-100*terrain[x][y]/200,100-100*terrain[x][y]/200,255);
-    //  stroke(100-100*terrain[x][y]/200,100-100*terrain[x][y]/200,100-100*terrain[x][y]/200,255);
-
-     // if(delay>100){
-     // stroke(240, 110, 150, 255*y/410);
-    //  }
-     //var loc = abs(rows/2-y) + abs(cols/2-x);
-     //var loc = y*cols+x
-     //var i = floor(map(loc,0,(rows/2+cols/2),0,wave.length));
-    // var i = floor(map(loc,0,(rows*cols+cols),0,wave.length));
-
-    // fill((215*cos(delay*PI/300)+20*wave[i]),sin(delay*PI/1000)*175+15*wave[i],175+10*wave[i]-terrain[x][y]*5,255);
-     fill((215*cos(delay*PI/300)),sin(delay*PI/1000)*175,175+tan(delay*PI/4000)-terrain[x][y]*5,255);
-     stroke(0,255);
-      vertex(x*scl, y*scl, terrain[x][y]);
-      vertex(x*scl, (y+1)*scl, terrain[x][y+1]);
-    }
-    endShape();
-    //rotateX(-y*PI/cols);
-  }
 
 }
 
