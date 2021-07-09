@@ -29,7 +29,7 @@ let meh = 0;
 let osx = 0;
 let osy = 0;
 let frequency = 7;
-  let topValue=5;
+let topValue=5;
 var amplitude;
 function preload(){
   song = loadSound('CarlSagan.mp3');
@@ -115,25 +115,17 @@ function draw() {
   if(chamber >= topValue){
     chamber = 0;
   }
-
+  let circleSize = 20;
   stroke(255, 255);
   stroke(telemetry[chamber]);
   noFill();
-  let radius = 100+amp*100;
+  beginShape();
+  for(let angle=delay;angle< delay+360;angle=angle+2){
+    x=(250)*cos(radians(angle))-0;
+    y=(250)*sin(radians(angle))+0;
   //frequency = 5+delay/10000;
   frequency = 11+delay/50000;
-  beginShape(POINTS);
-  	for (let i = 0; i < 360; i = i + 1) {
-      var j = floor(map(i,0,360,0,wave.length));
-      strokeWeight(3+cos(delay*PI));
-  	  theta = i * (360 / 360);
-  	  phase = ((PI) / 360);
-  	  meh = (radius * 1.5) * sin((frequency+wave[j]*.001) * theta + phase) * cos(phase);
-  	  osx = (10 + meh) * cos(theta);
-  	  osy = (10 + meh) * sin(theta);
-	    vertex(osx , osy ,0);
-    }
-  endShape();
+
   chamber = chamber+1;
 
   strokeWeight(0.1);
@@ -166,19 +158,11 @@ function draw() {
 
     // fill((215*cos(delay*PI/300)+20*wave[i]),sin(delay*PI/1000)*175+15*wave[i],175+10*wave[i]-terrain[x][y]*5,255);
      fill((215*cos(delay*PI/300)),sin(delay*PI/1000)*175,175+tan(delay*PI/4000)-terrain[x][y]*5,255);
-
-     //noStroke();
-    stroke(0,255);
-
-
-
+     stroke(0,255);
       vertex(x*scl, y*scl, terrain[x][y]);
       vertex(x*scl, (y+1)*scl, terrain[x][y+1]);
-
     }
-
     endShape();
-
     //rotateX(-y*PI/cols);
   }
 
