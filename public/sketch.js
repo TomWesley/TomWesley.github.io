@@ -98,10 +98,10 @@ function draw() {
   xValue = xValue + unitStepX;
   yValue = yValue + unitStepY;
 
-  if(xValue <= -width/2 || xValue >= width/2){
+  if(xValue <= -width/2 + circleSize/2 || xValue >= width/2 - circleSize/2){
     unitStepX = unitStepX*-1;
   }
-  if(yValue <= -height/2|| yValue >= height/2){
+  if(yValue <= -height/2 + circleSize/2 || yValue >= height/2 - circleSize/2){
     unitStepY = unitStepY*-1;
   }
   translate(width/2, height/2);
