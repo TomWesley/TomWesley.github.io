@@ -108,8 +108,8 @@ function draw() {
   let volume = amp*circleSize;
 
   beginShape();
-  for(let angle = 0; angle <= 180; angle = angle+1){
-    let index = floor(map(angle, 0, 180, 0, wave.length));
+  for(let angle = 0; angle <= 360; angle = angle+1){
+    let index = floor(map(angle, 0, 360, 0, wave.length));
     let r = map(wave[index], -1, 1, circleSize/3, circleSize);
 
     let x = r * sin(angle) + xValue;
