@@ -37,7 +37,7 @@ let unitStepY = 5;
 
 function preload(){
   song = loadSound('CarlSagan.mp3');
-  fft = new p5.FFT();
+  fft = new p5.FFT(0.5);
 
 }
 
@@ -62,7 +62,9 @@ function setup() {
 }
 
 function draw() {
+  rotate(delay/10000);
   image(stars,0,0);
+  rotate(-delay/10000);
 /*  beginShape();
   texture(stars);
 
@@ -98,21 +100,33 @@ function draw() {
   xValue = xValue + unitStepX;
   yValue = yValue + unitStepY;
 
-  if(xValue <= -width/2 + circleSize/2 || xValue >= width/2 - circleSize/2){
+  if(xValue <= -width/2 + circleSize/3 || xValue >= width/2 - circleSize/3){
     unitStepX = unitStepX*-1;
   }
-  if(yValue <= -height/2 + circleSize/2 || yValue >= height/2 - circleSize/2){
+  if(yValue <= -height/2 + circleSize/3|| yValue >= height/2 - circleSize/3){
     unitStepY = unitStepY*-1;
   }
   translate(width/2, height/2);
   let volume = amp*circleSize;
 
   beginShape();
-  for(let angle = 0; angle <= 360; angle = angle+1){
+  for(let angle = 0; angle <= 180; angle = angle+1){
     let index = floor(map(angle, 0, 360, 0, wave.length));
     let r = map(wave[index], -1, 1, circleSize/3, circleSize);
 
     let x = r * sin(angle) + xValue;
+    let y = r * cos(angle) + yValue;
+  //  x=(circleSize+(volume)*wave[index])*cos(radians(angle))-0;
+  //  y=(circleSize+(volume)*wave[index])*sin(radians(angle))+0;
+    vertex(x,y);
+  }
+  endShape();
+  beginShape();
+  for(let angle = 0; angle <= 180; angle = angle+1){
+    let index = floor(map(angle, 0, 360, 0, wave.length));
+    let r = map(wave[index], -1, 1, circleSize/3, circleSize);
+
+    let x = r * -sin(angle) + xValue;
     let y = r * cos(angle) + yValue;
   //  x=(circleSize+(volume)*wave[index])*cos(radians(angle))-0;
   //  y=(circleSize+(volume)*wave[index])*sin(radians(angle))+0;
